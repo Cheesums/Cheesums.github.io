@@ -1,3 +1,13 @@
+article{
+	display: grid;
+	grid-template-columns: 1fr 15% [start] 5% 60% 5% [end] 15% 1fr;
+	
+}
+
+article *{
+  grid-column: start/end;
+}
+
 .post-meta-data{
   font-size: 12px;
   color: gray;
@@ -13,7 +23,7 @@
 .post{
     float: none;
     min-width: 300px;
-    max-width: 600px;
+    max-width: 6000px;
     min-height: 163px;
 }
 
