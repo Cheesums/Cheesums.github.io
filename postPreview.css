@@ -15,6 +15,13 @@
   position: absolute;
   bottom: 0;
   left: 0;
+  color: black;
+  text-decoration: none;
+}
+
+.header-title-logo{
+  width: 60px;
+  height: 40px;
 }
 
 .header-links{
@@ -23,6 +30,15 @@
   position: absolute;
   bottom: 4px;
   right: 0;
+}
+
+.header-links-github{
+  color: gray;
+  text-decoration: none;
+}
+
+.sub-header{
+  font-style: italic;
 }
 
 .post-preview{
