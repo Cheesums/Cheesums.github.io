@@ -1,6 +1,6 @@
 article{
 	display: grid;
-	grid-template-columns: 1fr 15% [start] 5% 60% 5% [end] 15% 1fr;
+	grid-template-columns: 1fr 5% [start] 15% 60% 15% [end] 5% 1fr;
 	
 }
 
@@ -21,9 +21,11 @@ article *{
 }
 
 .post{
+    margin: auto;
+    width: 100%;
     float: none;
     min-width: 300px;
-    max-width: 6000px;
+    max-width: 800px;
     min-height: 163px;
 }
 
@@ -74,4 +76,9 @@ article *{
 .title:hover{
   color: blue;
   
+}
+
+.post-preview-body{
+  background-color: yellow;
+  min-height: 85px;
 }
