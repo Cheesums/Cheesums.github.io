@@ -64,7 +64,7 @@ body{
 }
 
 .post-preview-title:hover{
-  color: blue;
+  color: cadetblue;
   
 }
 
@@ -89,9 +89,8 @@ body{
 
 .post-preview-img{
     float: left;
-    width: 220px;
-    height: 160px;
-
+    width: auto;
+    height: 166px;
     margin-top: 18px;
     margin-right: 5px;
     margin-bottom: 3px;
@@ -100,7 +99,7 @@ body{
 .post-preview-body{
   
   min-height: 120px;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .post-preview-read-more{
@@ -154,4 +153,10 @@ body{
 p, ul{
   font-family: 'Montserrat', sans-serif;
   font-size: 16px
+}
+
+img{
+  width: 100%;
+  max-width: 700px;
+  vertical-align: middle;
 }

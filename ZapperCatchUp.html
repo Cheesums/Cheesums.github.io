@@ -5,21 +5,20 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href="style.css">
   <title>Zapper Gamepad Introduction</title>
-
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
   <div class="content">
 
     <div class="header">
-        <a href="Cheesums.com">
+        <a href="index.html">
             <span class="header-title">
             <img class ="header-title-logo" src="Cheese.PNG">
             Cheesums
             </span>
         </a>
         <span class="header-links">
-            <a  class="header-links-github" href="github.com">GitHub</a>
+            <a target="_blank" class="header-links-github" href="https://github.com/Cheesums/">GitHub</a>
         </span>
         </div>
     <div class="sub-header">Novel Controller Projects</div>
@@ -30,17 +29,20 @@
       <time class="post-meta-date" datetime="December 12, 2018">December 17, 2018</time>
       <span class="post-meta-topics">
         <span class="post-meta-topics-tag">Controller</span>
-        <span class="post-meta-topics-tag">Website</span>
+        <span class="post-meta-topics-tag">Zapper</span>
+        <span class="post-meta-topics-tag">Arduino</span>
       </span>
     </div>
     <div class="article">
       <div class="introduction">
-        <p>I like novel controllers. It fascinates me to see and play around with methods of control that don’t follow the traditional style of gamepad that is designed to be held in two hands by a couple of nubs. One classic style of more novel controllers is the light gun. And no light gun is more iconic than Nintendo’s NES Zapper.</p>
+        <p>Before I explain anything I need to give a huge shoutout to <a target="_blank" href="https://github.com/Avamander/">Avamander</a> for maintaing the Arduino TVout library and to <a target="_blank" href="https://www.beardypig.com/">beardypig</a> for doing so much of the initial research into the Zapper.</p>
+        <p>I love novel controllers. It fascinates me to see and play around with methods of control that don’t follow the traditional style of gamepad that is designed to be held in two hands by a couple of nubs. One classic style of more novel controllers is the light gun. And no light gun is more iconic than Nintendo’s NES Zapper.</p>
         <h3>My Problem</h3>
           <p>Light guns aren’t designed to work on just any old pc game, and the NES zapper certainly doesn’t have that plug and playability that modern USB gamepads have. I plan to remedy that problem in this project.</p>
             <p>Let me say right here that I have virtually no experience in any of the things that I plan to try to utilize for this project. My physical electrical knowledge is basically just poorly soldering big wires together. My programming knowledge is in rudimentary LabView and ladder logic, with some tiny splashing of c, c++, and java. All this to say, I don’t know anything. Alright, moving on to the project.</p>
           <p>I’ve decided that I want to design an application of the Zapper that allows me to interface with a computer just like any old USB gamepad and provide meaningful input to any game that would accept a generic USB gamepad.</p>
         <h3>My Solution</h3>
+          <img src="./blog/ZapperCatchUp/SetupWithDisplay.jpg">
           <p>The zapper will be plugged into an Arduino board with the 32u4 microprocessor chip. This chip will be able to process zapper inputs into generic USB gamepad outputs via the micro USB programming port on the board.</p>
           <p>This processor will also produce a composite video signal to be sent to a CRT television. This video will primarily be a heads-up display, showing buttons that would normally be seen on a gamepad (such as directional arrows and labelled buttons).</p>
           <p>The idea is that the user will point at the button that they wish to press and shoot.  When the trigger is pulled on the zapper, the processor will see this and perform a hit detection routine. To not go into too many specifics, the routine will display a series of frames and watch the zapper’s response to each frame. At this point, the processor will have determined which button on the tv has been shot, and it will output that information over USB as a gamepad button press.</p>
@@ -52,16 +54,23 @@
         <h2>Where We Are Now</h2>
           <p>I’ve been working on the project for a few weeks. Maybe a few months if you consider from when I started putting some semi-consistent effort into it, or maybe even a couple years if you consider from when I first did any work on this project. In these last few weeks (months/years) I managed to make a decent amount of progress, but I’m starting to get some very “drill down” and large scope type problems/tasks that it will help me greatly to write documentation, progress, and goals. Hence, this blog post.</p>
           <h3>Arduino TVout</h3>
-            <p>I started this project by first focusing on generating the composite video signal using a 32u4 chip. To do this I found an Arduino library called Arduino TVout. Information about how to set up TVout and how it works can be found by googling. Primarily I use this <a href="">GitHub repo</a> for most of my quick checks.</p>
+            <p>I started this project by first focusing on generating the composite video signal using a 32u4 chip. To do this I found an Arduino library called Arduino TVout. Information about how to set up TVout and how it works can be found by googling. Primarily I use this <a target="_blank" href="https://github.com/Avamander/arduino-tvout">GitHub repo</a>, by Avamander, for most of my quick checks.</p>
             <p>The important stuff we need to know is that TVout is an interrupt driven library and generating a composite video signal is highly timing dependent. This means two things for our project:</p>
             <ul>
-              <li>First, may need to be conservative with processing time to being used outside of generating the video signal. </li>
+              <li>First, we may need to be conservative with processing time being used outside of generating the video signal. </li>
               <li>And secondly, we need to be very careful about using more interrupts, so we don’t block out and essentially de-sync our video signal too much.</li>
             </ul>
             <p>As a side note the library will output the video signal with a resolution of 196x98 pixels.</p>
-            <p>I originally set up this display by programming each object individually. This was very tedious to set up and was very tedious to make any changes. I then changed the system to have a class for different object types and to be able to choose between one of for positions for this object to be drawn in. This implementation is not down very well and is begging to be fixed but it works for not. Here is a screenshot of that result.</p>
+            <p>I originally set up this display by programming each object individually. This was very tedious to set up and was very tedious to make any changes. I then changed the system to have a class for different object types and to be able to choose between one of for positions for this object to be drawn in. This implementation is not down very well and is begging to be fixed but it works for now.</p>
+            <p>And here is a screenshot of the resulting video:</p>
+            
+              <img src="./blog/ZapperCatchUp/ZapperGamepadDisplay.png">
+            
           <h3>NES Zapper</h3>
-            <p>After making the video signal work like I wanted, I began work on integrating the zapper. I found and referenced a very similar experiment performed by beardypig for much of this portion. The zapper has two signals, a trigger signal and a detect signal. Trigger is controlled by the zapper’s trigger and detect is controlled by a light sensor in the barrel. I wired the zapper to the Arduino following beardypig’s schematic and set up interrupts in my program similar to beardypig’s delay test experiment. </p>
+            <p>After making the video signal work like I wanted, I began work on integrating the zapper. I found and referenced a very similar experiment performed by <a target="_blank" href="https://www.beardypig.com/2015/12/11/nes-zapper-experiments-1/">beardypig</a> for much of this portion. The zapper has two signals, a trigger signal and a detect signal. Trigger is controlled by the zapper’s trigger and detect is controlled by a light sensor in the barrel. I wired the zapper to the Arduino following beardypig’s schematic:</p>
+            <p>I'm using a different processor than what beardypig used, so my schematic is just a little bit differnt:</p>  
+            <img src="./blog/ZapperCatchUp/ZapperGamepadSchematic.png">
+            <p>Then I set up interrupts in my program similar to beardypig’s delay test experiment.</p>
             <p>I set up a program that would, ideally, toddle the fill on the middle button when the zapper shot a white part of the screen. This program worked but with a caveat. Whenever the zapper was pointed at a white portion of the screen, the display under the point being target would be de-synced and jumpy. This was caused by the detect interrupt constantly being re-entered. This was then solved by detaching the detect interrupt inside of the detect interrupt routine and then reattaching it when the trigger was pulled. This means that the detect routine is only entered once per trigger pull.</p>
             <p>One more problem occurring with the zapper integration is a bounce on the trigger switch. This is currently causing the detect routine to me entered two to three times per trigger pull. It doesn’t greatly affect the operation of the program, but it does cause inconsistency.</p>
             <p>This section won’t be so long in the future as it will be incremental updates rather than the whole story. So sorry about the length this time around.</p>
