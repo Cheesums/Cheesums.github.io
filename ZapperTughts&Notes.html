@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Zapper Gamepad Thoughts & Notes</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <div class="content">
+
+    <div class="header">
+        <a href="index.html">
+            <span class="header-title">
+            <img class ="header-title-logo" src="Cheese.PNG">
+            Cheesums
+            </span>
+        </a>
+        <span class="header-links">
+            <a target="_blank" class="header-links-github" href="https://github.com/Cheesums/">GitHub</a>
+        </span>
+        </div>
+    <div class="sub-header">Novel Controller Projects</div>
+
+    <h1>Zapper Gamepad Thoughts & Notes</h1>
+
+    <div class="post-meta">
+      <time class="post-meta-date" datetime="March 11, 2023">March 11, 2023</time>
+      <span class="post-meta-topics">
+        <span class="post-meta-topics-tag">Controller</span>
+        <span class="post-meta-topics-tag">Zapper</span>
+        <span class="post-meta-topics-tag">Arduino</span>
+      </span>
+    </div>
+    <div class="article">
+      <div class="introduction">
+        <p>I’ve played with this project on and off since the last update posted on this site. Little progress has been made toward my ultimate goal, but progress has been made in understanding the benefits and limitations of the devices and libraries being employed.</p>
+       <h3>Arduino TVout</h3>
+          <p>Firstly, as discussed previously, the ATmega 32u4 chip in combination with Arduino TVout will be limited by the interrupt driven library. Care will of course need to be taken when using interrupts. A potential issue that I had not considered before was the availability of the microcontroller to emulate an HID device while operating with TVout. It may be the case that the emulation and communication involved with the HID emulation can be disrupted by the interrupts used by the TVout library. This will need to be tested for viability. If I find the two features cannot work simultaneously it may be possible to stop TVout to update the HID output or it may be necessary to use a second microcontroller to operate the HID.</p>
+        <h3>NES Zapper</h3>
+          <p>There is not much to be said about any further understanding of the Zapper. One small not is that I found infrared light (unsurprisingly) triggers the light detector on the Zapper. This was an issue for me as I was attempting to use the device in the same room as a tracking lighthouse for HTC Vive which tends to flood the room with infrared light.</p>
+        <h3>Hit Detection</h3>
+          <p>Since the last post I have theorized but not tested a hit detection routine for determining the result of a trigger pull . TVout offers a hook on the vertical blank and on the horizontal blank that allows the user to run very fast routines. (~60 microseconds on vertical blank and ~3 microseconds on horizontal blank). One plan was to use the HBI (Horizontal Blank Interrupt) to count line numbers and the VBI (Vertical Blank Interrupt) to reset the line number count.</p>
+          <p>From the line count the next step is potentially to use timing to determine where in the line a trigger was sensed. With this method the HBI could reset a hardware timer and the Zepper detection interrupt could be used to store the contents of the timer.</p>
+          <p>A different plan is to modify the line rendering code to count each pixel being rendered. This plan could potentially work by adding an instruction on each pixel to increment a counter. The built in delay that controls the pixel width could then be shortened to accommodate the time used by the increment instruction(s). This method would negate the need to use the HBI as the pixel count would only need to be rest on each vertical blank. This plan relies on the time required to increment a counter being less than the time currently being delayed. Going forward I will be investigating the viability of this option.</p>
+      </div>
+        <div class="issues">
+          <h2>Issues</h2>
+            <h3>New Issues</h2>
+              <ul>
+                <li>Compatibility of HID emulation with TVout</li>
+              </ul>
+            <h3>Recurring Issues</h2>
+              <ul>
+                <li>Trigger bounce causes more interrupt routine entrances than intended</li>
+                <li>Display apppears to not be entirely symmetrical</li>
+              </ul>
+            <h3>Fixed Issues</h2>
+              <p>No fixed issues on account of this being the first iteration.</p>
+        </div>
+        <div class="Goals">
+          <h2>Goals</h2>
+            <h3>Short Term</h3>
+              <ul>
+                <li>Test compatibility of HID emulation w/ TVout</li>
+                <li>Program hit detection to differentiate objects
+                  <ul class="list-tier-2">
+                    <li>Test timing & counting plans outlined above</li>
+                  </ul>
+                </li>
+                <li>Fix trigger bounce
+                  <ul class="list-tier-2">
+                    <li>Preferably find a solution that does not cost a delay</li>
+                  </ul>
+                </li>
+              </ul>
+          <h3>Long Term</h3>
+              <ul>
+                <li>Improve
+                  <ul class="list-tier-2">
+                    <li>Make it more intuitive to edit object position/rotation</li>
+                    <li>Make any position/rotation possible</li>
+                  </ul>
+                </li>
+                <li>Add more displays and press options with a way to swap between them</li>
+                <li>Add option to feed in a composite video signal for the button display to be overlaid on top of</li>
+                <li>Create pc application wih graphical UI to create new button displays and automatically convert to code</li>
+              </ul>
+        </div>
+      </div>
+  </div>
+  <div class="footer">
+      <p class="footer-content">Cheesums - Thanks for visiting :)</p>
+  </div>
+</body>
+</html>
